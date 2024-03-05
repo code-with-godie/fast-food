@@ -1,0 +1,30 @@
+.users{
+color: white;
+  .info{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+
+    button{
+     flex: 1;
+padding: 1rem;
+border: none;
+color: white;
+font-weight: 400;
+font-size: 1.2rem;
+display: flex;
+align-items: center;
+justify-content: center;
+gap:.5rem;
+cursor: pointer;
+text-transform: capitalize;
+  background: #53AD8A;
+    }
+  }
+  h1{
+    font-size: 2rem;
+    flex: 1;
+    text-align: center;
+  }
+}
