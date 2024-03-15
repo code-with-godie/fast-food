@@ -16,7 +16,13 @@ const PayWithCardButton = ({children}) => {
     const dispatch  = useDispatch();
     const [stripeToken,setStripeToken] = useState(null);
     const navigate = useNavigate();
-    const {total:cartTotal,cartItems:items} = useSelector(state => state.cart);
+    const {total:cartTotal,cartItems:items,tax:cartTax} = useSelector(state => state.cart);
+      let tax =  cartTax * cartTotal;
+    tax = parseFloat(tax.toFixed(2))
+    let shipping = 0.03 * cartTotal;
+     shipping = parseFloat(shipping.toFixed(2))
+    let total = cartTotal + tax + shipping ;
+    total = parseFloat(total.toFixed(2));
     const {token} = useAppContext();
     const KEY ='pk_test_51OlVnOEUD0JiQ0JxeCfjzPZ2qWzxi5LOWwWvF1HYib5BfsxyteQBRuBehRbvLo7P4Hft2vbqFECLPm6x8tzd9oot00Gg8zdYPo'
     const onToken = (token)=>{
@@ -28,7 +34,7 @@ const PayWithCardButton = ({children}) => {
         const res =  await postData('/pay/card',{tokenId:stripeToken.id,amount:cartTotal});
          if(res){
           const {receipt_url,amount,source:{address_city,address_country,address_line1}} = res?.payment
-          console.log(receipt_url);
+          console.log(receipt_url,res);
           const order = {amount,address:`${address_city},${address_country},`,phone:address_line1,paymentType:'card',orderItems:ItemIDs,receipt_url}
           const newOrder = await postData('/order',order,token);
           if(newOrder){
@@ -48,8 +54,8 @@ const PayWithCardButton = ({children}) => {
     image= {logo}
     billingAddress
     shippingAddress
-    description={`Yout toatl is Ksh. ${cartTotal}`}
-    amount={cartTotal}
+    description={`Yout toatl is Ksh. ${total}`}
+    amount={total}
     token={onToken}
     stripeKey={KEY}
     > {children} </StripeCheckout>

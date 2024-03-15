@@ -6,6 +6,8 @@ import paypal from '../../assets/paypal.png'
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components';
 import PayWithCardButton from './PayWithCardButton';
+import { useNavigate } from 'react-router-dom';
+import { getData, postData } from '../../api/apiCalls';
 const Container = styled.div`
     padding: 1rem;
     width: 100%;
@@ -100,6 +102,18 @@ const Button = styled.button`
 `
 const PaymentTypes = ({paymentType,setPaymentType,setPayment,pay}) => {
     const [index,setIndex] = useState(0);
+    const navigate = useNavigate();
+    const handlePayWithPaypal = async ()=>{
+        try {
+            const res = await getData('/pay/paypal',{total:3000});
+            if(res){
+                window.location.href = res?.approvalUrl;
+                console.log(res);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
     const handleClick = (index,type)=>{
         setIndex(index);
         setPaymentType(type)
@@ -147,10 +161,10 @@ const PaymentTypes = ({paymentType,setPaymentType,setPayment,pay}) => {
             </PaymentMethodDescription>
         </PaymentMethodWrapper>
         <ButtonWrapper>
-             <Button onClick={()=> setPayment(false)} > <KeyboardArrowLeft/> prev</Button>
+             <Button onClick={()=> navigate('/cart')} > <KeyboardArrowLeft/> prev</Button>
              { paymentType === 'card' && <PayWithCardButton><Button> Pay with card <KeyboardArrowRight/> </Button></PayWithCardButton> }
              { paymentType === 'mpesa' &&  <Button onClick={pay}  >mpesa <KeyboardArrowRight/> </Button> }
-             { paymentType === 'paypal' &&  <Button onClick={pay}  >paypal <KeyboardArrowRight/> </Button> }
+             { paymentType === 'paypal' &&  <Button onClick={handlePayWithPaypal}  >paypal <KeyboardArrowRight/> </Button> }
              </ButtonWrapper>
     </Container>
   )

@@ -8,7 +8,7 @@ import { Close } from '@mui/icons-material'
 import { useDropzone } from 'react-dropzone'
 import { postData } from '../../../api/apiCalls'
 import { useDispatch, useSelector } from 'react-redux'
-import { addProduct, productFetchFailure, productFetchStart, productFetchSuccess } from '../../../context/productSlice';
+// import { addProduct, productFetchFailure, productFetchStart, productFetchSuccess } from '../../../context/productSlice';
 const Container = styled.section`
 width: 100%;
 max-width: 600px;
@@ -120,19 +120,19 @@ const RemoveProduct= ({setOpen,open}) => {
   const onSubmit = async e =>{
     e.preventDefault();
     try {
-      dispatch(productFetchStart())
+      // dispatch(productFetchStart())
       const res = await postData('/products',product);
       if(res){
         setProduct({img:'',title:"",sellingPrice:'',buyingPrice:'',discount:'',quantity:'',categories:''});
-        dispatch(productFetchSuccess());
-        dispatch(addProduct(res.product));
+        // dispatch(productFetchSuccess());
+        // dispatch(addProduct(res.product));
         setOpen(false);
         await postData(`/activity?type=PRODUCT_CREATION`);
         
       }
     } catch (error) {
       const messege = error?.reponse?.data?.messege || 'Something went wrong'   
-      dispatch(productFetchFailure(messege));
+      // dispatch(productFetchFailure(messege));
       console.log(error);
     }
   }

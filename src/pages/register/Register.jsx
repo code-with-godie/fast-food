@@ -22,7 +22,7 @@ font-size:1.5rem;
 color: #000000ef;
 font-weight: 300;
 text-align: center;
-padding: 3rem .5rem 1rem .5rem;
+padding: .5rem .5rem 1rem .5rem;
 `
 const Form = styled.form`
 display: flex;
@@ -111,7 +111,7 @@ color: #030303;
 `
 const Register = () => {
   const {loginWithGoogle,user:loggedInUser,openToast} = useAppContext();
-  const [user,setUser] = useState({firstName:'',lastName:'', email:'',password:''});
+  const [user,setUser] = useState({firstName:'',lastName:'', email:'',password:'',confirmPassword:''});
   const [disabled,setDisabled] = useState(true);
   const [loading,setLoading] = useState(false);
   const navigate = useNavigate();
@@ -140,13 +140,13 @@ const Register = () => {
     }
   }
   useEffect(()=>{
-    if(user?.firstName?.length >= 3 && user?.lastName?.length >= 3 && user.email && user?.password?.length >= 5){
+    if(user?.firstName?.length >= 3 && user?.lastName?.length >= 3 && user.email && user?.password?.length >= 5 && user.confirmPassword === user.password){
       setDisabled(false)
     }else{
       setDisabled(true);
     }
   },[user.name,user.email,user.password])
-  useEffect(()=>{
+  useEffect(()=>{ 
     if(loggedInUser){
       navigate('/')
     }
@@ -165,10 +165,14 @@ const Register = () => {
         <Label>Atleat 3 characters</Label>
 
         </InputWrapper>
-        <FormInput type='email' value={user.email} onChange={e =>handleChange(e)} name='email' placeholder='Enter phone number or email' />
+        <FormInput type='email' value={user.email} onChange={e =>handleChange(e)} name='email' placeholder='Enter your  email address' />
         <InputWrapper>
         <FormInput type='password' value={user.password} onChange={e =>handleChange(e)} name='password' placeholder='Enter password' />
         <Label>Atleat 5 characters</Label>
+        </InputWrapper>
+        <InputWrapper>
+        <FormInput type='password' value={user.confirmPassword} onChange={e =>handleChange(e)} name='confirmPassword' placeholder='confirm password' />
+        <Label>should match the password</Label>
         </InputWrapper>
         <FormButton disabled = {disabled} > {loading ? <LoadingAnimation/> : 'continue'} </FormButton>
       </Form>
@@ -177,7 +181,7 @@ const Register = () => {
         <DividerText>Or</DividerText>
       </DividerContainer>
       <OauthButton onClick={loginWithGoogle} > <Image src={google} alt='google' /> continue with Google</OauthButton>
-      <OauthButton> <FacebookRounded className='fb' /> continue with Facebook</OauthButton>
+      {/* <OauthButton> <FacebookRounded className='fb' /> continue with Facebook</OauthButton> */}
       <Footer>
         By proceeding you consent to get calls,Whatapp or sms messages
         including by automated means,from Fast Food and affillites to the number 

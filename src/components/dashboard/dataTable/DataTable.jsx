@@ -6,16 +6,15 @@ import "./dataTable.scss";
 import { Link, useLocation } from "react-router-dom";
 import view from '../../../assets/view.svg'
 import deleteIcon from '../../../assets/delete.svg'
-import { useSelector } from "react-redux";
 import Model from "../model/Model";
 
 const DataTable = (props) => {
+  const update = (row)=>{
+    props.setProduct(row);
+    props.updateProduct(true)
+  }
   const location = useLocation();
   const show = location.pathname.startsWith('/products')
-  const currentUser = useSelector(state => state.user.currentUser);
-
-  const handleDelete = (id) => {
-  };
 
   const actionColumn= {
     field: "action",
@@ -23,19 +22,13 @@ const DataTable = (props) => {
     width: 200,
     renderCell: (params) => {
       return (
-        <div className="action">
-          {
-            currentUser?._id === params.row._id  || show || currentUser?.role === 'admin'?
-          <Link to={`/${props.slug}/${params.row._id}`}>
+        <div  className="action">
+          <div onClick={() =>{ update(params.row)}}>
             <img src={view} alt="" />
-          </Link>: <button>not allowed</button>
-           }
-          { 
-            (currentUser?.role === 'admin'  ||  currentUser?._id === params.row._id   || show) &&
-          <div className="delete" onClick={() => handleDelete(params.row._id)}>
+          </div>
+          <div className="delete" onClick={() => props.handleDelete(params.row._id)}>
             <img src={deleteIcon} alt="" />
           </div>
-          }
         </div>
       );
     },

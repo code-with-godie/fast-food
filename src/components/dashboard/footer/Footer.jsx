@@ -3,8 +3,8 @@ import "./footer.scss"
 const Footer = () => {
   return (
     <div className="footer">
-      <span>lamadmin</span>
-      <span>© Lama Dev Admin Dashboard</span>
+      <span>Fresh Grub</span>
+      <span>© Fresh Grub Admin Dashboard</span>
     </div>
   )
 }

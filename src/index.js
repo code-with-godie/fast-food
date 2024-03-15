@@ -6,7 +6,6 @@ import {AppContextProvider} from './context/AppContext'
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { Provider } from 'react-redux';
 import { store } from './context/cartStore';
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>

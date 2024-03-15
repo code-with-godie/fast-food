@@ -5,7 +5,10 @@ import { useFetch } from '../../api/useFetch';
 import LoadingAnimation from '../../components/loading/LoadingAnimation';
 import { useAppContext } from '../../context/AppContext';
 import { Avatar } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import dayjs from 'dayjs';
+import moment from 'moment'
+import "../../components/dashboard/dataTable/dataTable.scss";
 
 const Wraper = styled.div`
 min-height: 500px;
@@ -41,7 +44,10 @@ display: flex;
 align-items: center;
 justify-content: flex-start;
 width: 100%;
-max-width: 900px;
+max-width: 1200px;
+.data{
+  width: 100%;
+}
 .grid{
   * {
     flex: 1;
@@ -50,14 +56,16 @@ max-width: 900px;
 `
 const Orders = () => {
   const {user} = useAppContext();
-  const {data,loading,error} = useFetch(`/order/${user?._id}`);
+  const location = useLocation();
+  const showAll = location?.pathname.startsWith('/dashboard/orders') && user?.role === 'admin' ? 'admin' :'normal'
+  const {data,loading,error} = useFetch(`/order/${user?._id}?admin=${showAll}`);
   const [myRows,setRows] = useState([])
 
   useEffect(()=>{
     if(data){
       const newData = data?.orders.map(item => {
-        const {user:{name,profilePic},amount,address,paymentType,_id,createdAt} = item;
-        return ({name,profilePic,amount,address,paymentType,_id,date:createdAt})
+        const {user:{firstName,lastName,profilePic},amount,address,paymentType,_id,createdAt} = item;
+        return ({firstName,lastName,profilePic,amount,address,paymentType,_id,date:createdAt})
       })
       setRows(newData)
     }
@@ -70,15 +78,20 @@ const Orders = () => {
 const columns = [
   { field: 'profilePic', headerName: 'Avatar',flex:0.7 ,renderCell:params =><Avatar src={params.row.profilePic} /> },
   { field: '_id', headerName: 'Order ID' ,flex:2.5},
-  { field: 'name', headerName: 'Name' ,flex:1.7   },
+  { field: 'firstName', headerName: 'first Name' ,flex:1.7   },
+  { field: 'lastName', headerName: 'last Name' ,flex:1.7   },
   { field: 'address', headerName: 'Address' ,flex:1.5   },
   { field: 'paymentType', headerName: 'Payment' ,flex:0.8  },
   { field: 'amount', headerName: 'Amount' ,flex:.8   },
-  { field: 'date', headerName: 'Date' ,flex:1.5  },
-  { field: 'items', headerName: 'Items' ,flex:1.3,renderCell:params =><Link to={`/orders/items/${params.row._id}`} className='link' >view items</Link>   },
+  { field: 'date', headerName: 'Date' ,flex:4 ,renderCell:params =>{
+    const formattedDate = moment(params.row.date).format('dddd-MM-Do-YYYY h:mm:ss A');
+    return <p> {formattedDate} </p>
+  }   },
+  // { field: 'date', headerName: 'Date' ,flex:3 ,renderCell:params =><p className='success' > {`${dayjs(params.row.date)?.$D}/ ${dayjs(params.row.date)?.$M}/${dayjs(params.row.date)?.$y} : ${dayjs(params.row.date)?.$H}: ${dayjs(params.row.date)?.$m}` } </p>   },
+  { field: 'items', headerName: 'Items' ,flex:1.5,renderCell:params =><Link to={`/orders/items/${params.row._id}`} className='link' >view items</Link>   },
   { field: 'status', headerName: 'Status' ,flex:1 ,renderCell:params =><button className='success' >paid</button>   },
 ];
-
+console.log(dayjs(new Date()));
 if (loading) {
   return <Wraper>
     <Container>
@@ -87,6 +100,7 @@ if (loading) {
   </Wraper>
 }
 if (error) {
+  console.log(error);
   return <Wraper>
     <Container>
       <h1>something went wrong!!!!</h1>
@@ -96,31 +110,35 @@ if (error) {
   return (
     <Wraper>
       <Container>
+        <div className="dataTable data ">
+
         <DataGrid 
+        className='dataGrid'
            initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 10,
-            },
-          },
-        }}
-        slots={{ toolbar: GridToolbar }}
-        slotProps={{
-          toolbar: {
-            showQuickFilter: true,
-            quickFilterProps: { debounceMs: 500 },
-          },
-        }}
-        pageSizeOptions={[25]}
-        checkboxSelection
-        disableRowSelectionOnClick
-        disableColumnFilter
-        disableDensitySelector
-        disableColumnSelector
-        rowHeight={70} 
-        getRowId={row => row._id} 
-        rows={myRows}
-         columns={columns} />
+             pagination: {
+               paginationModel: {
+                 pageSize: 10,
+                },
+              },
+            }}
+            slots={{ toolbar: GridToolbar }}
+            slotProps={{
+              toolbar: {
+                showQuickFilter: true,
+                quickFilterProps: { debounceMs: 500 },
+              },
+            }}
+            pageSizeOptions={[25]}
+            checkboxSelection
+            disableRowSelectionOnClick
+            disableColumnFilter
+            disableDensitySelector
+            disableColumnSelector
+            rowHeight={70} 
+            getRowId={row => row._id} 
+            rows={myRows}
+            columns={columns} />
+            </div>
       </Container>
     </Wraper>
   )

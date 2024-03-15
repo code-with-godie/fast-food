@@ -128,7 +128,7 @@ const UserDetails = ({handleChange,user,payment,setPayment}) => {
             type='number'
             name='phone'
             value={user.phone}
-             disabled = {user.phone?.length >=9}
+             disabled = {user.phone?.length >=10}
             onChange={handleChange}
              />
             </PhoneWrapper>

@@ -1,11 +1,11 @@
 import "./add.scss";
-import { logout } from '../../../context/userSlice'
+// import { logout } from '../../../context/userSlice'
 import { useDispatch } from 'react-redux'
 const Add = (props) => {
   const dispatch = useDispatch();
   const handleClick = ()=>{
     if(props.confirm){
-      dispatch(logout())
+      // dispatch(logout())
     }
   }
   const handleSubmit = (e) => {

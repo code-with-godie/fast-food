@@ -16,20 +16,36 @@ import SuccessPayment from '../components/payment/SuccessPayment';
 import OrderItems from '../pages/orders/OrderItems';
 import DashboardLayout from './layout/DashboardLayout';
 import HomeDashboard from '../pages/dashbord/home/Dashboard'
-// import DashboardProducts from '../pages/dashbord/products/Products'
+import Profile from '../pages/profile/Profile';
+import DashboardProducts from '../pages/dashbord/products/Products'
+import Users from '../pages/dashbord/users/Users';
+import Success from '../pages/success/Success';
+import Fail from '../pages/fail/Fail';
 export const router = createBrowserRouter([
     {
-        path:'/',
+        path:'/dashboard',
         element:<DashboardLayout/>,
         children:[
             {
                 path:'/dashboard',
                 element:<HomeDashboard/>
             },
-            // {
-            //     path:'/dashboard/products',
-            //     element:<DashboardProducts/>
-            // },
+            {
+                path:'/dashboard/products',
+                element:<DashboardProducts/>
+            },
+            {
+                path:'/dashboard/users',
+                element:<Users/>
+            },
+            {
+                path:'/dashboard/profile',
+                element:<Profile/>
+            },
+            {
+                path:'/dashboard/orders',
+                element:<Orders/>
+            },
         ]
     },
     {
@@ -58,6 +74,10 @@ export const router = createBrowserRouter([
                 path:'/payment',
                 element:<Payment/>
             },
+            {
+                path:'/profile',
+                element:<Profile/>
+            },
         ]
     },
         
@@ -67,6 +87,14 @@ export const router = createBrowserRouter([
         path:'/',
         element:<ComponentLayout/>,
         children:[
+              {
+                path:'/success',
+                element:<Success/>
+            },
+            {
+                path:'/failed',
+                element:<Fail/>
+            },
             {
                 path:'/category/:category',
                 element:<Category/>

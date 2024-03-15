@@ -1,15 +1,17 @@
 
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { Avatar, IconButton } from '@mui/material'
+import { Avatar, FormControlLabel, IconButton } from '@mui/material'
 import logo from '../../../assets/logo.png'
 import LoadingAnimation from '../../../components/loading/LoadingAnimation';
-import { Close } from '@mui/icons-material'
+import { CheckBox, Close } from '@mui/icons-material'
 import { useDropzone } from 'react-dropzone'
 import { postData } from '../../../api/apiCalls'
 import { useDispatch, useSelector } from 'react-redux'
-import {productFetchFailure, productFetchStart, productFetchSuccess } from '../../../context/productSlice';
-import {openToast } from '../../../context/appSlice';
+ import { ToastContainer, toast } from 'react-toastify';
+  import 'react-toastify/dist/ReactToastify.css';
+// import {productFetchFailure, productFetchStart, productFetchSuccess } from '../../../context/productSlice';
+// import {openToast } from '../../../context/appSlice';
 const Container = styled.section`
 width: 100%;
 max-width: 600px;
@@ -68,7 +70,7 @@ const Title = styled.h1`
     text-align: center;
     color: white;
     font-weight: 400;
-    font-size: 2rem;
+    font-size: 1.5rem;
     @media screen and (min-width:768px) {
         font-size: 3rem;
     }
@@ -105,13 +107,25 @@ outline: none;
   text-transform: capitalize;
 }
 `
+const Area = styled.textarea`
+  outline: none;
+  background-color: transparent;
+  border: 1px solid #bab9b9;
+  min-height: 50px;
+  padding:.5rem;
+  color: white;
+  font-size: 1.2rem;
+  resize: vertical;
+  font-weight: 200;
+`
 const AddProduct= ({setOpen,setProducts}) => {
-  const user = useSelector(state => state.user.user);
-  const token = useSelector(state => state.user.token);
-  const loading  = useSelector(state => state.products.loading);
-  const dispatch = useDispatch();
+  // const user = useSelector(state => state.user.user);
+  // const token = useSelector(state => state.user.token);
+  const token = 'acd'
+  const [loading,setLoading]  = useState(false)
+  // const dispatch = useDispatch();
   const [disabled,setDisabled]  = useState(true);
-  const [product,setProduct] = useState({img:'',title:"",price:'',quantity:'',category:'',description:''});
+  const [product,setProduct] = useState({img:'',name:"",price:'',quantity:'',categories:'',description:'',instructions:''});
 
   const onChange = e =>{
     const name = e.target.name;
@@ -119,22 +133,54 @@ const AddProduct= ({setOpen,setProducts}) => {
     console.log(name);
     setProduct(prev => ({...prev,[name]:value}))
   }
+  const handleCategory = e =>{
+    const name = e.target.name;
+    const value = name === 'categories' ? e.target.value?.split(','): e.target.value?.split('.');
+    console.log(value);
+    setProduct(prev => ({...prev,[name]:value}))
+  }
   const onSubmit = async e =>{
     e.preventDefault();
     try {
-      dispatch(productFetchStart())
+      setLoading(true)
       const res = await postData('/products',product,token);
       if(res){
-        setProduct({img:'',title:"",price:'',quantity:'',categories:''});
-        dispatch(productFetchSuccess());
+        console.log(res);
         setProducts(prev => [res?.product,...prev]);
-        setOpen(false);        
+            toast.success('product successfully creted',{
+        position: "top-right",
+autoClose: 3000,
+hideProgressBar: false,
+closeOnClick: true,
+pauseOnHover: true,
+draggable: true,
+progress: undefined,
+theme: "dark",
+// transition: Bounce,
+    }) 
+    setTimeout(() => {
+        setProduct({image:'',name:"",price:'',quantity:'',categories:''});
+      setOpen(false);        
+    }, 3500);
       }
     } catch (error) {
-      const messege = error?.response?.data?.messege || 'Something went wrong'   
-      dispatch(productFetchFailure(messege));
-      dispatch(openToast(messege))
+      const messege = error?.response?.data?.messege || 'Something went wrong'  
+      toast.error(messege,{
+        position: "top-right",
+autoClose: 5000,
+hideProgressBar: false,
+closeOnClick: true,
+pauseOnHover: true,
+draggable: true,
+progress: undefined,
+theme: "dark",
+// transition: Bounce,
+    }) 
+
       console.log(error);
+    }
+    finally{
+      setLoading(false);
     }
   }
    const { getInputProps, getRootProps, acceptedFiles, isDragActive } =
@@ -153,12 +199,12 @@ const AddProduct= ({setOpen,setProducts}) => {
             const fileReader = new FileReader();
             fileReader.readAsDataURL(acceptedFiles[acceptedFiles.length - 1]);
             fileReader.onload = () => {
-                setProduct(prev => ({...prev,img:fileReader.result}))
+                setProduct(prev => ({...prev,image:fileReader.result}))
             };
         }
     }, [acceptedFiles]);
     useEffect(()=>{
-      if(product.img.length <= 0 || product.title.length <= 0  ||!product.price || product.category.length <=0 || !product.quantity){
+      if(product?.image?.length <= 0 || product?.name?.length <= 0  ||!product?.price || product?.categories?.length <=0 ){
         setDisabled(true);
       }else{
         
@@ -170,7 +216,7 @@ const AddProduct= ({setOpen,setProducts}) => {
         <IconButton className='btn-close'  onClick={()=> setOpen(false)} >
             <Close className= 'close' />
         </IconButton>
-        <Avatar className='logo' alt='Ojay' src={product?.img || logo }  />
+        <Avatar className='logo' alt='Ojay' src={product?.image || logo }  />
         <Title>Add Stock </Title>
         <WrapperTwo>
       <Form onSubmit ={onSubmit} >
@@ -182,25 +228,29 @@ const AddProduct= ({setOpen,setProducts}) => {
                             hidden: true,
                         })}/>
         </Control>
-        <Input name='title' onChange={onChange} value={product.title}  placeholder={`Product title*`} />
+        <Input name='name' onChange={onChange} value={product.name}  placeholder={`Product name*`} />
         </InputWrapper>
         <InputWrapper>
         <Input name='price' type='number' step='0.5'  min={1} onChange={onChange} value={product.price}  placeholder={`Enter product price*`} />
         </InputWrapper>
-           <InputWrapper>
+           {/* <InputWrapper>
         <Input name='quantity'  onChange={onChange} value={product.quantity} min={1}  step='1' type='number'  placeholder={`Enter product quantity*`} />
-        </InputWrapper>
+        </InputWrapper> */}
            <InputWrapper>
-        <Input name='category'  onChange={onChange} value={product.category}   placeholder={`Enter product Category*`} />
+        <Input name='categories'  onChange={ handleCategory} value={product.categories}   placeholder={`Enter product Category*`} />
         </InputWrapper>
-           <InputWrapper>
-        <Input name='description'  onChange={onChange} value={product.description}   placeholder={`Enter product description*`} />
-        </InputWrapper>
+        <Area placeholder='Enter product description' name='description'  onChange={onChange} value={product.description} />
+        <Area placeholder='Enter product instruction' name='instructions'  onChange={ handleCategory} value={product.instructions} />
+        {/* <InputWrapper>
+        <FormControlLabel value='all' control={<CheckBox sx={
+          {color:'#cccccc', '&.Mui-checked':{color:'#53AD8A'}}} />} label ={'is the product acoholic'} />
+        </InputWrapper> */}
         <ControlWrapper>
             <Control className='active' disabled = {disabled} > {loading ? <LoadingAnimation/>:'ADD STOCK'} </Control>
         </ControlWrapper>
       </Form>
     </WrapperTwo>
+    <ToastContainer/>
       </Container>
   )
 }

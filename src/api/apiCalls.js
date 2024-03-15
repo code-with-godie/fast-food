@@ -19,8 +19,8 @@ export const updateData = async (url, payload, token) => {
     const res = await api.patch(url, payload, config);
     return res.data;
 };
-export const deleteData = async (url, payload, token) => {
+export const deleteData = async (url,token) => {
     const config = { headers: { Authorization: `Bearer ${token}` } };
-    const res = await api.patch(url, payload, config);
+    const res = await api.delete(url,config);
     return res.data;
 };

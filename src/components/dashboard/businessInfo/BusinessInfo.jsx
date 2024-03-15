@@ -47,7 +47,6 @@ const BusinessInfo = () => {
     <Container>
       <WrapperOne>
         <FastSellingItems/>
-        {/* <LatestStock/> */}
       </WrapperOne>
       <WrapperTwo>
         <SlowSellingItem/>

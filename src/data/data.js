@@ -1,4 +1,10 @@
-
+import order from '../assets/order.svg'
+import home from '../assets/home.svg'
+import user from '../assets/user.svg'
+import product from '../assets/product.svg'
+import setting from '../assets/order.svg'
+import backup from '../assets/backup.svg'
+// import chat from '../assets/chart.svg'
 ///new
 export const menu = [
   {
@@ -9,13 +15,13 @@ export const menu = [
         id: 1,
         title: "Homepage",
         url: "/dashboard",
-        icon: "home.svg",
+        icon:home,
       },
       {
         id: 2,
         title: "Profile",
-        url: "/dashboard/users/1",
-        icon: "user.svg",
+        url: "/dashboard/profile",
+        icon: user,
       },
     ],
   },
@@ -27,56 +33,20 @@ export const menu = [
         id: 1,
         title: "Users",
         url: "/dashboard/users",
-        icon: "user.svg",
+        icon: user,
       },
       {
         id: 2,
         title: "Products",
         url: "/dashboard/products",
-        icon: "product.svg",
+        icon: product,
       },
       {
         id: 3,
         title: "Orders",
         url: "/dashboard/orders",
-        icon: "order.svg",
-      },
-      {
-        id: 4,
-        title: "Posts",
-        url: "dashboard/posts",
-        icon: "post2.svg",
-      },
-    ],
-  },
-  {
-    id: 3,
-    title: "general",
-    listItems: [
-      {
-        id: 1,
-        title: "Elements",
-        url: "/admin/dashboard",
-        icon: "element.svg",
-      },
-      {
-        id: 2,
-        title: "Notes",
-        url: "/admin/dashboard",
-        icon: "note.svg",
-      },
-      {
-        id: 3,
-        title: "Forms",
-        url: "/admin/dashboard",
-        icon: "form.svg",
-      },
-      {
-        id: 4,
-        title: "Calendar",
-        url: "/admin/dashboard",
-        icon: "calendar.svg",
-      },
+        icon: order,
+      }
     ],
   },
   {
@@ -86,32 +56,14 @@ export const menu = [
       {
         id: 1,
         title: "Settings",
-        url: "/admin/dashboard",
-        icon: "setting.svg",
+        url: "/dashboard",
+        icon: setting,
       },
       {
         id: 2,
         title: "Backups",
-        url: "/admin/dashboard",
-        icon: "backup.svg",
-      },
-    ],
-  },
-  {
-    id: 5,
-    title: "analytics",
-    listItems: [
-      {
-        id: 1,
-        title: "Charts",
-        url: "/admin/dashboard",
-        icon: "chart.svg",
-      },
-      {
-        id: 2,
-        title: "Logs",
-        url: "/admin/dashboard",
-        icon: "log.svg",
+        url: "/dashboard",
+        icon: backup,
       },
     ],
   },

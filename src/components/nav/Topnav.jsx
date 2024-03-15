@@ -1,4 +1,4 @@
-import {LocalPizzaRounded, Payment, Person, ShoppingCart } from '@mui/icons-material';
+import {Dashboard, LocalPizzaRounded, Logout, Payment, Person, ShoppingCart } from '@mui/icons-material';
 import React, {useState} from 'react'
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -132,7 +132,8 @@ const [open,setOpen] = useState(false);
       </Left>
       <Right>
           
-        {user && <SignIn onClick={()=> setOpen(true)} >logout</SignIn> }
+        {user?.role === 'admin' && <SignIn onClick={()=> navigate('/dashboard')} > <Dashboard/> dashboard</SignIn> }
+        {user && <SignIn onClick={()=> setOpen(true)} ><Logout/>  logout</SignIn> }
          <Control onClick={()=> navigate('/menu')} >
               <LocalPizzaRounded className='icon' />
               <ControlLabel>Our Menu</ControlLabel>
@@ -150,7 +151,7 @@ const [open,setOpen] = useState(false);
               </Badge>
 
           </Control>
-            <IconButton >
+            <IconButton onClick={()=> navigate('/profile')} >
               <Avatar className='profile' src={user?.profilePic} alt={user?.name} />
               </IconButton>
           </UserControls>:<>

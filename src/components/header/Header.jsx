@@ -79,7 +79,7 @@ border-radius:50%;
 const Header = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const {toggleDrawer,showDrawer} = useAppContext();
+    const {toggleDrawer,showDrawer,user} = useAppContext();
     const amount = useSelector(state => state.cart.amount)
     const showCustomNav = location?.pathname === '/menu';
   return (
@@ -97,8 +97,8 @@ const Header = () => {
               </Badge>
               <ControlLabel>Cart</ControlLabel>
               </Control>
-               <IconButton>
-              <Avatar/>
+               <IconButton  >
+              <Avatar src={user?.profilePic} alt={user?.firstName} />
             </IconButton>
            </Custom>:
         <DescriptionContainer>
