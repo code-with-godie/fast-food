@@ -118,7 +118,7 @@ const Area = styled.textarea`
   resize: vertical;
   font-weight: 200;
 `
-const UpdateUser= ({setOpen,user:newUser,users}) => {
+const UpdateUser= ({setOpen,user:newUser,setUsers}) => {
   console.log(newUser);
   const token = 'acd'
   const [loading,setLoading]  = useState(false)
@@ -138,11 +138,19 @@ const UpdateUser= ({setOpen,user:newUser,users}) => {
       const res = await updateData(`/users/update/${newUser?._id}`,user,token);
       if(res){
         console.log(res);
-       users?.forEach((item,index)=>{
-        if(item?._id === res?.user?._id){
-          users.splice(index,1,res?.user)
-        }
-       })
+        setUsers(prev => prev.map(item=>{
+          if(item._id === res?.user?._id){
+            return res.user
+          }else{
+            return item
+          }
+        }))
+      //   console.log(res);
+      //  users?.forEach((item,index)=>{
+      //   if(item?._id === res?.user?._id){
+      //     users.splice(index,1,res?.user)
+      //   }
+      //  })
     
         // setProducts(prev => [res?.user,...prev]);
             toast.success('user successfully creted',{

@@ -3,7 +3,10 @@ import styled from 'styled-components'
 import url from '../../assets/how.jpg'
 const Container = styled.div`
 background-color: #F3F3F3;
-position: relative;
+/* position: relative; */
+position: sticky;
+top: 0;
+z-index: -1;
 `
 const Image = styled.img`
     max-width: 100%;

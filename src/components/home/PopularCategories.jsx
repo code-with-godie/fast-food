@@ -12,6 +12,9 @@ const Container = styled.div`
     min-height: 200px;
     background: linear-gradient(to bottom, #F3F3F3, white);
     padding-top: 2rem;
+    position: sticky;
+top: 0;
+z-index: -1;
 `
 const Title = styled.h1`
 text-align: center;

@@ -14,6 +14,7 @@ import logo from '../../assets/logo.png'
 // `
 const PayWithCardButton = ({children}) => {
     const dispatch  = useDispatch();
+    const {user} = useAppContext();
     const [stripeToken,setStripeToken] = useState(null);
     const navigate = useNavigate();
     const {total:cartTotal,cartItems:items,tax:cartTax} = useSelector(state => state.cart);
@@ -31,11 +32,13 @@ const PayWithCardButton = ({children}) => {
     const ItemIDs = items?.map(item => item._id);
     useEffect(()=>{
       const makePayment = async ()=>{
-        const res =  await postData('/pay/card',{tokenId:stripeToken.id,amount:cartTotal});
+        const res =  await postData('/pay/card',{tokenId:stripeToken.id,amount:cartTotal,email:user.email});
          if(res){
+          console.log('got response');
           const {receipt_url,amount,source:{address_city,address_country,address_line1}} = res?.payment
-          console.log(receipt_url,res);
+          // console.log(receipt_url,res);
           const order = {amount,address:`${address_city},${address_country},`,phone:address_line1,paymentType:'card',orderItems:ItemIDs,receipt_url}
+          console.log('saving order');
           const newOrder = await postData('/order',order,token);
           if(newOrder){
             dispatch(clearCart())

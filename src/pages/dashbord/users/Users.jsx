@@ -74,7 +74,6 @@ const Users = () => {
     try {
       const res = await deleteData(`/users/delete/${id}`);
       if(res){
-        
            setUsers(prev => prev.filter(item => item._id !== id));
           toast.success('product successfully deleted',{
         position: "top-right",
@@ -128,7 +127,7 @@ theme: "dark",
       </div>
       <DataTable updateProduct = {setOpen} setProduct = {setUser} slug="users" columns={columns} rows={users} handleDelete ={handleDelete}  />
           {open && <Model bg = ' #0000005c' center >
-        <UpdateUser users={users} user={user}  open = {open} setOpen={setOpen} setProducts={setUsers} />
+        <UpdateUser setUsers={setUsers} users={users} user={user}  open = {open} setOpen={setOpen} setProducts={setUsers} />
         </Model>}
         <ToastContainer/>
     </div>
